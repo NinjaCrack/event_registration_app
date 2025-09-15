@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  date: 2025-09-16
+  location: MyString
+  description: MyText
+  user: one
+  status: MyString
+
+two:
+  name: MyString
+  date: 2025-09-16
+  location: MyString
+  description: MyText
+  user: two
+  status: MyString
