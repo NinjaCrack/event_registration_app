@@ -1,1 +1,33 @@
 <h1>Events</h1>
+<%= form_with url: events_path, method: :get, local: true do |f| %>
+  <%= f.text_field :q, value: params[:q], placeholder: "Search events..." %>
+  <%= f.submit "Search" %>
+<% end %>
+
+<% if user_signed_in? %>
+  <%= link_to "Create Event", new_event_path, class: "btn btn-primary" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th><th>Date</th><th>Location</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @events.each do |event| %>
+      <tr>
+        <td><%= link_to event.name, event_path(event) %></td>
+        <td><%= event.date %></td>
+        <td><%= event.location %></td>
+        <td>
+          <%= link_to "Show", event_path(event) %>
+          <% if user_signed_in? && (current_user.admin? || event.user == current_user) %>
+            | <%= link_to "Edit", edit_event_path(event) %>
+            | <%= link_to "Delete", event_path(event), method: :delete, data: { confirm: "Delete?" } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

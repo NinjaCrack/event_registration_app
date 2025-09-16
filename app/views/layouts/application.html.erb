@@ -23,6 +23,23 @@
   </head>
 
   <body>
+  <% if user_signed_in? %>
+    Logged in as <strong><%= current_user.email %></strong>. | <%= current_user.name %> | <%= current_user.admin? ? "Admin" : "User" %>
+    <%= link_to "Logout", destroy_user_session_path, method: :delete %>
+    <%= button_to "Logout (button_to)", destroy_user_session_path, method: :delete %>
+    | <%= link_to "Events", events_path %>
+    | <!-- <%= link_to "My Events", events_path(q: { user_id_eq: current_user.id }) %> -->
+    | <%= link_to "Create Event", new_event_path %>
+    | <%= link_to "Profile", edit_user_registration_path %>
+    | <%= link_to "Home", root_path %>
+    <% if current_user.admin? %>
+      | <%= link_to "Admin Dashboard", admin_root_path %>
+    <% end %>
+  <% else %>
+    <%= link_to "Login", new_user_session_path %> |
+    <%= link_to "Sign Up", new_user_registration_path %>
+  <% end %>
+  <hr>
     <%= yield %>
   </body>
 </html>

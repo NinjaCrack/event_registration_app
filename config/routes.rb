@@ -6,7 +6,23 @@ Rails.application.routes.draw do
     resources :registrations, only: [:create, :edit, :update, :destroy]
   end
 
-  
+  namespace :admin do
+    root to: "dashboard#index"
+    resources :events do
+      collection do
+        post :bulk_delete
+        post :bulk_close
+      end
+    end
+    resources :registrations do
+      collection do
+        get :export_csv
+        post :bulk_delete
+      end
+    end
+  end
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
