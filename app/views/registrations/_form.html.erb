@@ -1,0 +1,24 @@
+<%= form_with model: [event, registration], local: true do |f| %>
+  <% if registration.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(registration.errors.count, "error") %> prevented this registration from being saved:</h4>
+      <ul>
+        <% registration.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :attendee_name %>
+    <%= f.text_field :attendee_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :attendee_email %>
+    <%= f.email_field :attendee_email, class: "form-control" %>
+  </div>
+
+  <%= f.submit "Register", class: "btn btn-primary" %>
+<% end %>

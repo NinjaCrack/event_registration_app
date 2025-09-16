@@ -46,7 +46,7 @@ class RegistrationsController < ApplicationController
     end
 
     def authorize_manage_registration!
-        return if current_user&.admin? || @registration.user == current_user
+        return if current_user&.admin? || @registration.user == current_user || @event.user == current_user
 
         redirect_to @event, alert: "Not authorized to manage this registration."
     end

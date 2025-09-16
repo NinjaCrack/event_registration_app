@@ -4,14 +4,25 @@ class EventsController < ApplicationController
     before_action :authorize_creator!, only: %i[edit update destroy]
 
     def index
+        @upcoming_events = Event.open_events
+        @past_events = Event.past
         @events = Event.order(date: :asc)
         if params[:q].present?
             q = "%#{params[:q]}"
             @events = @events.where("name ILIKE ? OR location ILIKE ?", q, q)
         end
     end
+    
+    def my_events
+        if user_signed_in?
+            @my_events = current_user.events.order(date: :asc)
+        else
+            redirect_to new_user_session_path, alert: "You need to sign in to view your events."
+        end
+    end
 
     def show
+        @event = Event.find(params[:id])
         @registrations = @event.registrations.order(created_at: :desc)
         @registration = Registration.new
     end

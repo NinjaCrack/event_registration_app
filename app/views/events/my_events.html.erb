@@ -1,0 +1,16 @@
+<h1>My Events</h1>
+
+<% if @my_events.any? %>
+  <ul>
+    <% @my_events.each do |event| %>
+      <li>
+        <%= link_to event.name, event_path(event) %> - 
+        <%= event.date.strftime("%B %d, %Y") %> at <%= event.location %>
+        (<%= link_to "Edit", edit_event_path(event) %> | 
+         <%= link_to "Delete", event_path(event), method: :delete, data: { confirm: "Are you sure?" } %>)
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>You haven’t created any events yet. <%= link_to "Create one", new_event_path %></p>
+<% end %>

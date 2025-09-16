@@ -4,6 +4,10 @@ Rails.application.routes.draw do
 
   resources :events do
     resources :registrations, only: [:create, :edit, :update, :destroy]
+
+    collection do
+      get :my_events
+    end
   end
 
   namespace :admin do

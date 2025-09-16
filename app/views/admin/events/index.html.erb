@@ -1,0 +1,28 @@
+<h1>All Events</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Location</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @events.each do |event| %>
+      <tr>
+        <td><%= event.name %></td>
+        <td><%= event.date %></td>
+        <td><%= event.location %></td>
+        <td>
+          <%= link_to "View", event_path(event) %> |
+          <%= link_to "Delete", admin_event_path(event), method: :delete, data: { confirm: "Delete?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= button_to "Bulk Close", bulk_close_admin_events_path, method: :post, class: "btn btn-warning" %>
+<%= button_to "Bulk Delete", bulk_delete_admin_events_path, method: :post, class: "btn btn-danger" %>

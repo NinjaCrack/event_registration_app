@@ -6,6 +6,9 @@ class Event < ApplicationRecord
 
   # Validations
   validates :name, presence: true, length: { maximum: 200 }
+  validates :date, presence: true
+  validates :location, presence: true, length: { maximum: 300 }
+  validates :description, presence: true
   validates :status, presence: true, inclusion: { in: %w[open closed] }
 
   scope :open_events, -> { where('date >= ?', Date.current).order(date: :asc) } # Scope to get upcoming events

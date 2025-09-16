@@ -1,19 +1,22 @@
 <h1><%= @event.name %></h1>
 <p><strong>Date:</strong> <%= @event.date %></p>
 <p><strong>Location:</strong> <%= @event.location %></p>
-<p><strong>Description:</strong> <%= simple_format(@event.description) %></p>
+<p><strong>Description:</strong> <%= @event.description %></p>
+<p><strong>Created by:</strong> <%= @event.user.name %></p>
 
+<%= link_to "Back to Events", events_path, class: "btn btn-secondary" %>
 <% if user_signed_in? && (current_user.admin? || @event.user == current_user) %>
-  <%= link_to "Edit", edit_event_path(@event) %> |
-  <%= link_to "Delete", event_path(@event), method: :delete, data: { confirm: "Are you sure?" } %> |
+  <%= link_to "Edit Event", edit_event_path(@event), class: "btn btn-primary" %>
+  <!-- <%= link_to "Delete Event", event_path(@event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %> -->
+  <%= button_to "Delete Event", event_path(@event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %>
 <% end %>
-<%= link_to "Back to list", events_path %>
-
-<hr>
 
 <h2>Registrations</h2>
-<table>
-  <thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead>
+
+<table class="table">
+  <thead>
+    <tr><th>Name</th><th>Email</th><th>Actions</th></tr>
+  </thead>
   <tbody>
     <% @registrations.each do |reg| %>
       <tr>
@@ -22,7 +25,8 @@
         <td>
           <% if user_signed_in? && (current_user.admin? || @event.user == current_user) %>
             <%= link_to "Edit", edit_event_registration_path(@event, reg) %> |
-            <%= link_to "Delete", event_registration_path(@event, reg), method: :delete, data: { confirm: "Delete?" } %>
+            <!-- <%= link_to "Delete", event_registration_path(@event, reg), method: :delete, data: { confirm: "Delete?" } %> -->
+            <%= button_to "Delete", event_registration_path(@event, reg), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
           <% end %>
         </td>
       </tr>
@@ -30,23 +34,5 @@
   </tbody>
 </table>
 
-<h3>Add registration</h3>
-<%= form_with model: [@event, @registration], local: true do |f| %>
-  <% if @registration && @registration.errors.any? %>
-    <div class="errors"><%= @registration.errors.full_messages.join(", ") %></div>
-  <% end %>
-
-  <div>
-    <%= f.label :attendee_name %>
-    <%= f.text_field :attendee_name %>
-  </div>
-
-  <div>
-    <%= f.label :attendee_email %>
-    <%= f.email_field :attendee_email %>
-  </div>
-
-  <div>
-    <%= f.submit "Register" %>
-  </div>
-<% end %>
+<h3>Register for this Event</h3>
+<%= render "registrations/form", event: @event, registration: @registration %>
