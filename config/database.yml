@@ -10,7 +10,7 @@
 #       Install PostgreSQL and put its /bin directory on your path.
 #
 # Configure Using Gemfile
-# gem "pg"
+# gem "pg" 
 #
 default: &default
   adapter: postgresql
@@ -81,9 +81,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: event_registration_app_production
-    username: event_registration_app
-    password: <%= ENV["EVENT_REGISTRATION_APP_DATABASE_PASSWORD"] %>
+    url: <%= ENV["DATABASE_URL"] %>
   cache:
     <<: *primary_production
     database: event_registration_app_production_cache
