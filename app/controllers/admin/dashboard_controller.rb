@@ -10,8 +10,8 @@ class Admin::DashboardController < Admin::BaseController
         #                   .select('events.*, COUNT(registrations.id) AS attendees_count')
         #                   .order('attendees_count DESC')
         #                   .limit(10)
-        @upcoming_events = Event.where('date >= ?', Date.today).count 
-        @past_events = Event.where('date < ?', Date.today).count
+        @upcoming_events = Event.where("date >= ?", Date.today).count
+        @past_events = Event.where("date < ?", Date.today).count
     end
 
     private

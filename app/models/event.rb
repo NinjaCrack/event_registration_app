@@ -11,11 +11,10 @@ class Event < ApplicationRecord
   validates :description, presence: true
   validates :status, presence: true, inclusion: { in: %w[open closed] }
 
-  scope :open_events, -> { where('date >= ?', Date.current).order(date: :asc) } # Scope to get upcoming events
-  scope :past, -> { where('date < ?', Date.current).order(date: :desc) } # Scope to get past events
+  scope :open_events, -> { where("date >= ?", Date.current).order(date: :asc) } # Scope to get upcoming events
+  scope :past, -> { where("date < ?", Date.current).order(date: :desc) } # Scope to get past events
 
   def open_for_registration?
-    status == 'open'
+    status == "open"
   end
-  
 end

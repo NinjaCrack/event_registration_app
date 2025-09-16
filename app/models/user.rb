@@ -10,9 +10,8 @@ class User < ApplicationRecord
 
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
-  
+
   def admin?
     is_admin
   end
-
 end

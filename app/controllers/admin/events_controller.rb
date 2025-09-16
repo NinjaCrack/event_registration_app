@@ -2,7 +2,7 @@ module Admin
   class EventsController < ApplicationController
     before_action :authenticate_user!
     before_action :require_admin!
-    before_action :set_event, only: [:show, :edit, :update, :destroy]
+    before_action :set_event, only: [ :show, :edit, :update, :destroy ]
 
     def index
       # @events = Event.includes(:user, :registrations).order(created_at: :desc)
@@ -14,7 +14,7 @@ module Admin
           "events.name ILIKE :q
           OR events.location ILIKE :q
           OR events.description ILIKE :q
-          OR events.status ILIKE :q", 
+          OR events.status ILIKE :q",
           q: query
         )
 

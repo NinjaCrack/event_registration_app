@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
     before_action :authorize_manage_registration!, only: %i[edit update destroy]
 
     def create
-        unless @event.open_for_registration? 
+        unless @event.open_for_registration?
             redirect_to @event, alert: "Registrations are closed for this event."
             return
         end
@@ -16,7 +16,7 @@ class RegistrationsController < ApplicationController
             redirect_to @event, notice: "Registered successfully."
         else
             @registrations = @event.registrations.order(created_at: :desc)
-            render 'events/show', status: :unprocessable_entity
+            render "events/show", status: :unprocessable_entity
         end
     end
 

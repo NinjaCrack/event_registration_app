@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
-    before_action :authenticate_user!, except: [:index, :show]
-    before_action :set_event, only: %i[show edit update destroy] 
+    before_action :authenticate_user!, except: [ :index, :show ]
+    before_action :set_event, only: %i[show edit update destroy]
     before_action :authorize_creator!, only: %i[edit update destroy]
 
     def index
@@ -12,7 +12,7 @@ class EventsController < ApplicationController
             @events = @events.where("name ILIKE ? OR location ILIKE ?", q, q)
         end
     end
-    
+
     def my_events
         if user_signed_in?
             @my_events = current_user.events.order(date: :asc)
@@ -54,7 +54,7 @@ class EventsController < ApplicationController
         @event.destroy
         redirect_to events_path, notice: "Event deleted successfully."
     end
-    
+
     private
 
     def set_event

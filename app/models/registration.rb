@@ -6,5 +6,4 @@ class Registration < ApplicationRecord
   validates :attendee_name, presence: true
   validates :attendee_email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :attendee_email, uniqueness: { scope: :event_id, message: "has already registered for this event" }
-  
 end

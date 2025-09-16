@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root "events#index"
 
   resources :events do
-    resources :registrations, only: [:create, :edit, :update, :destroy]
+    resources :registrations, only: [ :create, :edit, :update, :destroy ]
 
     collection do
       get :my_events
@@ -40,5 +40,4 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  
 end

@@ -9,10 +9,10 @@ class Admin::RegistrationsController < ApplicationController
     if params[:search].present?
       query = "%#{params[:search]}%"
       @registrations = @registrations.joins(:event).where(
-        "registrations.attendee_name ILIKE :q 
-        OR registrations.attendee_email ILIKE :q 
-        OR events.name ILIKE :q 
-        OR events.location ILIKE :q", 
+        "registrations.attendee_name ILIKE :q
+        OR registrations.attendee_email ILIKE :q
+        OR events.name ILIKE :q
+        OR events.location ILIKE :q",
         q: query
       )
     end
@@ -28,9 +28,9 @@ class Admin::RegistrationsController < ApplicationController
       @registrations = Registration.includes(:event).order(created_at: :desc)
 
       csv_data = CSV.generate(headers: true) do |csv|
-        csv << ["Event", "Attendee Name", "Attendee Email", "Registered At"]
+        csv << [ "Event", "Attendee Name", "Attendee Email", "Registered At" ]
         @registrations.each do |reg|
-          csv << [reg.event.name, reg.attendee_name, reg.attendee_email, reg.created_at]
+          csv << [ reg.event.name, reg.attendee_name, reg.attendee_email, reg.created_at ]
         end
       end
 
