@@ -19,7 +19,7 @@ Rails.application.routes.draw do
         post :bulk
       end
     end
-    
+
     resources :registrations do
       collection do
         get :search

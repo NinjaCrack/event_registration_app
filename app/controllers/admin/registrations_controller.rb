@@ -5,8 +5,8 @@ class Admin::RegistrationsController < ApplicationController
   before_action :require_admin!
 
   # Make sure @registration is set before @event for actions that need both
-  before_action :set_registration, only: [:show, :edit, :update, :destroy]
-  before_action :set_event, only: [:new, :create, :edit, :update]
+  before_action :set_registration, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_event, only: [ :new, :create, :edit, :update ]
 
   # GET /admin/registrations
   def index
@@ -80,12 +80,12 @@ class Admin::RegistrationsController < ApplicationController
 
       @registrations = if registration_ids.any?
                         Registration.includes(:event).where(id: registration_ids)
-                      else
+      else
                         Registration.includes(:event) # All registrations if none selected
-                      end
+      end
 
       csv_data = CSV.generate(headers: true) do |csv|
-        csv << ["Event", "Attendee Name", "Attendee Email", "Registered At"]
+        csv << [ "Event", "Attendee Name", "Attendee Email", "Registered At" ]
         @registrations.each do |reg|
           csv << [
             reg.event.name,
@@ -96,7 +96,7 @@ class Admin::RegistrationsController < ApplicationController
         end
       end
 
-      send_data csv_data, filename: "registrations-#{Date.today}.csv", type: 'text/csv'
+      send_data csv_data, filename: "registrations-#{Date.today}.csv", type: "text/csv"
 
     else
       redirect_to admin_registrations_path, alert: "No action performed."
