@@ -2,22 +2,68 @@ module Admin
   class EventsController < ApplicationController
     before_action :authenticate_user!
     before_action :require_admin!
+    before_action :set_event, only: [:show, :edit, :update, :destroy]
 
     def index
-      @events = Event.includes(:user, :registrations).order(created_at: :desc)
+      # @events = Event.includes(:user, :registrations).order(created_at: :desc)
+      @events = Event.all.order(date: :desc)
+      if params[:search].present?
+        # @events = @events.where("name ILIKE ? OR location ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+        query = "%#{params[:search]}%"
+        @events = @events.where(
+          "events.name ILIKE :q
+          OR events.location ILIKE :q
+          OR events.description ILIKE :q
+          OR events.status ILIKE :q", 
+          q: query
+        )
+
+      end
     end
 
-    def bulk_close
-      Event.where(id: params[:event_ids]).update_all(status: "closed")
-      redirect_to admin_events_path, notice: "Selected events were closed."
+    def bulk
+      event_ids = params[:event_ids]
+      case params[:bulk_action]
+      when "Bulk Delete"
+        Event.where(id: event_ids).destroy_all
+        redirect_to admin_events_path, notice: "Selected events were deleted."
+      when "Bulk Close"
+        Event.where(id: event_ids).update_all(status: "closed")
+        redirect_to admin_events_path, notice: "Selected events were closed."
+      else
+        redirect_to admin_events_path, alert: "No action performed."
+      end
     end
 
-    def bulk_delete
-      Event.where(id: params[:event_ids]).destroy_all
-      redirect_to admin_events_path, notice: "Selected events were deleted."
+
+    def show
     end
+
+    def edit; end
+
+    def update
+      if @event.update(event_params)
+        redirect_to admin_event_path(@event), notice: "Event updated successfully."
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      @event.destroy
+      redirect_to admin_events_path, notice: "Event deleted successfully."
+    end
+
 
     private
+
+    def event_params
+      params.require(:event).permit(:name, :date, :location, :description, :status)
+    end
+
+    def set_event
+      @event = Event.find(params[:id])
+    end
 
     def require_admin!
       redirect_to root_path, alert: "Not authorized" unless current_user.is_admin?

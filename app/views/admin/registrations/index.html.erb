@@ -1,0 +1,44 @@
+<h1>Admin: Manage Registrations</h1>
+
+<%= form_with url: admin_registrations_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :search, "Search by Attendee or Event" %>
+    <%= f.text_field :search %>
+    <%= f.submit "Search" %>
+  </div>
+<% end %>
+
+<%= form_with url: bulk_admin_registrations_path, method: :post, local: true do %>
+  <table>
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Event</th>
+        <th>Attendee Name</th>
+        <th>Email</th>
+        <th>Registered At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @registrations.each do |r| %>
+        <tr>
+          <td><%= check_box_tag "registration_ids[]", r.id %></td>
+          <td><%= r.event.name %></td>
+          <td><%= r.attendee_name %></td>
+          <td><%= r.attendee_email %></td>
+          <td><%= r.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          <td>
+            <%= link_to "Edit", edit_admin_registration_path(r) %> |
+            <%= link_to "Delete", admin_registration_path(r), method: :delete, data: { confirm: "Delete this registration?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div>
+    <%= submit_tag "Bulk Delete", name: "commit" %>
+    <%= submit_tag "Export CSV", name: "commit" %>
+  </div>
+<% end %>

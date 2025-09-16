@@ -13,15 +13,17 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: "dashboard#index"
     resources :events do
+      resources :registrations
       collection do
-        post :bulk_delete
-        post :bulk_close
+        get :search
+        post :bulk
       end
     end
     resources :registrations do
       collection do
+        get :search
         get :export_csv
-        post :bulk_delete
+        post :bulk
       end
     end
   end

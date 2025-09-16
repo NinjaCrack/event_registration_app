@@ -1,0 +1,16 @@
+<h1><%= @event.name %></h1>
+<p><strong>Date:</strong> <%= @event.date %></p>
+<p><strong>Location:</strong> <%= @event.location %></p>
+<p><strong>Status:</strong> <%= @event.status %></p>
+<p><strong>Description:</strong> <%= @event.description %></p>
+
+<h2>Registrations</h2>
+<ul>
+  <% @event.registrations.each do |r| %>
+    <li>
+      <%= r.attendee_name %> - <%= r.attendee_email %>
+      (<%= link_to "Edit", edit_admin_event_registration_path(@event, r) %> |
+       <%= link_to "Delete", admin_event_registration_path(@event, r), method: :delete, data: { confirm: "Are you sure?" } %>)
+    </li>
+  <% end %>
+</ul>

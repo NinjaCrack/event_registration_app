@@ -1,34 +1,46 @@
-require 'csv'
+require "csv"
 
-class Admin::RegistrationsController < Admin::BaseController
+class Admin::RegistrationsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :require_admin!
+
   def index
-    @registrations = Registration.includes(:event, :user).order(created_at: :desc)
-    if params[:q].present?
-      q = "%#{params[:q]}%"
-      @registrations = @registrations.joins(:event).where("registrations.attendee_name ILIKE ? OR registrations.attendee_email ILIKE ? OR events.name ILIKE ?", q, q, q)
+    @registrations = Registration.includes(:event).order(created_at: :desc)
+    if params[:search].present?
+      query = "%#{params[:search]}%"
+      @registrations = @registrations.joins(:event).where(
+        "registrations.attendee_name ILIKE :q 
+        OR registrations.attendee_email ILIKE :q 
+        OR events.name ILIKE :q 
+        OR events.location ILIKE :q", 
+        q: query
+      )
     end
   end
 
-  def export_csv
-    registrations = Registration.includes(:event)
-    csv = CSV.generate(headers: true) do |csv|
-      csv << %w[event_name attendee_name attendee_email registered_at user_id]
-      registrations.find_each do |r|
-        csv << [r.event.name, r.attendee_name, r.attendee_email, r.created_at.iso8601, r.user_id]
+
+  def bulk
+    case params[:commit]
+    when "Bulk Delete"
+      Registration.where(id: params[:registration_ids]).destroy_all
+      redirect_to admin_registrations_path, notice: "Selected registrations deleted."
+    when "Export CSV"
+      @registrations = Registration.includes(:event).order(created_at: :desc)
+
+      csv_data = CSV.generate(headers: true) do |csv|
+        csv << ["Event", "Attendee Name", "Attendee Email", "Registered At"]
+        @registrations.each do |reg|
+          csv << [reg.event.name, reg.attendee_name, reg.attendee_email, reg.created_at]
+        end
       end
+
+      send_data csv_data, filename: "registrations-#{Date.today}.csv"
     end
-    send_data csv, filename: "registrations-#{Date.today}.csv"
   end
 
-  def bulk_delete
-    ids = params[:ids] || []
-    Registration.where(id: ids).delete_all
-    redirect_to admin_registrations_path, notice: "Deleted #{ids.size} registrations"
-  end
+  private
 
-  def destroy
-    registration = Registration.find(params[:id])
-    registration.destroy
-    redirect_to admin_registrations_path, notice: 'Deleted'
+  def require_admin!
+    redirect_to root_path, alert: "Access denied." unless current_user&.admin?
   end
 end

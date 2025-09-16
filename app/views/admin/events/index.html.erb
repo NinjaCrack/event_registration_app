@@ -1,28 +1,47 @@
-<h1>All Events</h1>
+<h1>Admin: Manage Events</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Location</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @events.each do |event| %>
+<%= form_with url: admin_events_path, method: :get, local: true do |f| %>
+  <div>
+    <%= f.label :search, "Search Events" %>
+    <%= f.text_field :search, value: params[:search] %>
+    <%= f.submit "Search" %>
+  </div>
+<% end %>
+
+<%= form_with url: bulk_admin_events_path, method: :post, local: true do %>
+  <table>
+    <thead>
       <tr>
-        <td><%= event.name %></td>
-        <td><%= event.date %></td>
-        <td><%= event.location %></td>
-        <td>
-          <%= link_to "View", event_path(event) %> |
-          <%= link_to "Delete", admin_event_path(event), method: :delete, data: { confirm: "Delete?" } %>
-        </td>
+        <th>Select</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+        <tr>
+          <td><%= check_box_tag "event_ids[]", event.id %></td>
+          <td><%= event.name %></td>
+          <td><%= event.date %></td>
+          <td><%= event.location %></td>
+          <td><%= event.status %></td>
+          <td>
+            <%= link_to "View", admin_event_path(event) %> |
+            <%= link_to "Edit", edit_admin_event_path(event) %> |
+            <%= link_to "Delete", admin_event_path(event),
+                  method: :delete,
+                  data: { confirm: "Are you sure?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= button_to "Bulk Close", bulk_close_admin_events_path, method: :post, class: "btn btn-warning" %>
-<%= button_to "Bulk Delete", bulk_delete_admin_events_path, method: :post, class: "btn btn-danger" %>
+  <div>
+    <%= submit_tag "Bulk Delete", name: "bulk_action" %>
+    <%= submit_tag "Bulk Close", name: "bulk_action" %>
+  </div>
+<% end %>

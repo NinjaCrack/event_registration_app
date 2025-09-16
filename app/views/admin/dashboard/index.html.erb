@@ -1,6 +1,22 @@
 <h1>Admin Dashboard</h1>
 
-<p>Total Events: <%= @total_events %></p>
-<p>Total Attendees: <%= @total_attendees %></p>
+<div class="stats">
+  <h2>Statistics</h2>
+  <ul>
+    <li><strong>Total Events:</strong> <%= @total_events %></li>
+    <li><strong>Total Registrations:</strong> <%= @total_registrations %></li>
+    <li><strong>Upcoming Events:</strong> <%= @upcoming_events %></li>
+    <li><strong>Past Events:</strong> <%= @past_events %></li>
+  </ul>
+</div>
 
-<%= link_to "Manage Events", admin_events_path, class: "btn btn-primary" %>
+<hr>
+
+<div class="quick-links">
+  <h2>Quick Links</h2>
+  <ul>
+    <li><%= link_to "Manage Events", admin_events_path %></li>
+    <li><%= link_to "Manage Registrations", admin_registrations_path %></li>
+    <li><%= link_to "Back to Site", root_path %></li>
+  </ul>
+</div>

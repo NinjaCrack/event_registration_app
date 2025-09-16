@@ -1,0 +1,42 @@
+<%= form_with model: [:admin, @event], local: true do |f| %>
+  <% if @event.errors.any? %>
+    <div class="errors">
+      <h4><%= pluralize(@event.errors.count, "error") %> prevented saving:</h4>
+      <ul>
+        <% @event.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :date %>
+    <%= f.date_field :date %>
+  </div>
+
+  <div>
+    <%= f.label :location %>
+    <%= f.text_field :location %>
+  </div>
+
+  <div>
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+
+  <div>
+    <%= f.label :status %>
+    <%= f.select :status, [["Open", "open"], ["Closed", "closed"]] %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+    <%= link_to "Cancel", admin_events_path %>
+  </div>
+<% end %>
