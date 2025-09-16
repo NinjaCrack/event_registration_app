@@ -1,32 +1,39 @@
-<%= form_with model: [:admin, @registration], local: true do |f| %>
-  <% if @registration.errors.any? %>
-    <div class="errors">
-      <h4><%= pluralize(@registration.errors.count, "error") %> prevented saving:</h4>
-      <ul>
-        <% @registration.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h3 class="card-title mb-3"><%= registration.new_record? ? "Register Attendee" : "Edit Registration" %></h3>
+
+    <% if registration.errors.any? %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% registration.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: [registration.event, registration],
+                  url: registration.new_record? ? admin_event_registrations_path(registration.event) : admin_event_registration_path(registration.event, registration),
+                  method: registration.new_record? ? :post : :patch,
+                  local: true do |f| %>
+
+      <div class="mb-3">
+        <%= f.label :attendee_name %>
+        <%= f.text_field :attendee_name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :attendee_email %>
+        <%= f.email_field :attendee_email, class: "form-control" %>
+      </div>
+
+      <div class="d-flex gap-2 justify-content-end">
+        <%= f.submit registration.new_record? ? "Register" : "Update", class: "btn btn-success" %>
+        <% unless registration.new_record? %>
+          <%= link_to "Cancel", admin_event_path(registration.event), class: "btn btn-outline-secondary" %>
         <% end %>
-      </ul>
-    </div>
-  <% end %>
+      </div>
 
-  <div>
-    <%= f.label :event_id, "Event" %>
-    <%= f.collection_select :event_id, Event.all, :id, :name, prompt: "Select Event" %>
+    <% end %>
   </div>
-
-  <div>
-    <%= f.label :attendee_name %>
-    <%= f.text_field :attendee_name %>
-  </div>
-
-  <div>
-    <%= f.label :attendee_email %>
-    <%= f.email_field :attendee_email %>
-  </div>
-
-  <div>
-    <%= f.submit %>
-    <%= link_to "Cancel", admin_registrations_path %>
-  </div>
-<% end %>
+</div>

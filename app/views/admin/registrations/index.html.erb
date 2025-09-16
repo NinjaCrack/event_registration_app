@@ -1,44 +1,57 @@
-<h1>Admin: Manage Registrations</h1>
+<div class="container my-4">
+  <h1>Admin: Manage Registrations</h1>
 
-<%= form_with url: admin_registrations_path, method: :get, local: true do |f| %>
-  <div>
-    <%= f.label :search, "Search by Attendee or Event" %>
-    <%= f.text_field :search %>
-    <%= f.submit "Search" %>
+  <!-- Search Form -->
+  <div class="d-flex justify-content-end mb-3">
+    <%= form_with url: admin_registrations_path, method: :get, local: true, class: "d-flex gap-2 align-items-center" do |f| %>
+      <%= f.text_field :search, value: params[:search], placeholder: "Search registrations...", class: "form-control", style: "max-width: 250px;" %>
+      <%= f.submit "Search", class: "btn btn-outline-primary" %>
+    <% end %>
   </div>
-<% end %>
 
-<%= form_with url: bulk_admin_registrations_path, method: :post, local: true do %>
-  <table>
-    <thead>
-      <tr>
-        <th>Select</th>
-        <th>Event</th>
-        <th>Attendee Name</th>
-        <th>Email</th>
-        <th>Registered At</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @registrations.each do |r| %>
+  <!-- Bulk Delete Form -->
+ <%= form_with url: bulk_admin_registrations_path, method: :post, local: true do %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
         <tr>
-          <td><%= check_box_tag "registration_ids[]", r.id %></td>
-          <td><%= r.event.name %></td>
-          <td><%= r.attendee_name %></td>
-          <td><%= r.attendee_email %></td>
-          <td><%= r.created_at.strftime("%Y-%m-%d %H:%M") %></td>
-          <td>
-            <%= link_to "Edit", edit_admin_registration_path(r) %> |
-            <%= link_to "Delete", admin_registration_path(r), method: :delete, data: { confirm: "Delete this registration?" } %>
-          </td>
+          <th><input type="checkbox" id="select_all"></th>
+          <th>Event</th>
+          <th>Attendee Name</th>
+          <th>Email</th>
+          <th>Registered At</th>
+          <th>Actions</th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @registrations.each do |r| %>
+          <tr>
+            <td><%= check_box_tag "registration_ids[]", r.id %></td>
+            <td><%= r.event.name %></td>
+            <td><%= r.attendee_name %></td>
+            <td><%= r.attendee_email %></td>
+            <td><%= r.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+            <td>
+              <%= link_to "Edit", edit_admin_event_registration_path(r.event, r), class: "btn btn-outline-primary btn-sm" %>
+              <%= link_to "Delete", admin_event_registration_path(r.event, r), method: :delete, data: { confirm: "Delete this registration?" }, class: "btn btn-outline-danger btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 
-  <div>
-    <%= submit_tag "Bulk Delete", name: "commit" %>
-    <%= submit_tag "Export CSV", name: "commit" %>
+  <div class="d-flex gap-2 mt-3">
+    <%= submit_tag "Bulk Delete", name: "commit", class: "btn btn-danger" %>
+    <%= submit_tag "Export CSV", name: "commit", class: "btn btn-success", data: { turbo: false } %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const selectAll = document.getElementById("select_all");
+    selectAll?.addEventListener("change", () => {
+      document.querySelectorAll('input[name="registration_ids[]"]').forEach(cb => cb.checked = selectAll.checked);
+    });
+  });
+</script>

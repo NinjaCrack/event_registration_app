@@ -1,22 +1,60 @@
-<h1>Admin Dashboard</h1>
+<div class="container my-4">
 
-<div class="stats">
-  <h2>Statistics</h2>
-  <ul>
-    <li><strong>Total Events:</strong> <%= @total_events %></li>
-    <li><strong>Total Registrations:</strong> <%= @total_registrations %></li>
-    <li><strong>Upcoming Events:</strong> <%= @upcoming_events %></li>
-    <li><strong>Past Events:</strong> <%= @past_events %></li>
-  </ul>
-</div>
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Admin Dashboard</h1>
+  </div>
 
-<hr>
+  <!-- Statistics Cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Events</h6>
+          <p class="card-text fs-4"><%= @total_events %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total Registrations</h6>
+          <p class="card-text fs-4"><%= @total_registrations %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-warning shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="card-title">Upcoming Events</h6>
+          <p class="card-text fs-4"><%= @upcoming_events %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-secondary shadow-sm">
+        <div class="card-body text-center">
+          <h6 class="card-title">Past Events</h6>
+          <p class="card-text fs-4"><%= @past_events %></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<div class="quick-links">
-  <h2>Quick Links</h2>
-  <ul>
-    <li><%= link_to "Manage Events", admin_events_path %></li>
-    <li><%= link_to "Manage Registrations", admin_registrations_path %></li>
-    <li><%= link_to "Back to Site", root_path %></li>
-  </ul>
+  <!-- Administration Actions -->
+  <div class="mb-4">
+    <h5 class="mb-3">Administration</h5>
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to admin_events_path, class: "btn btn-outline-primary flex-grow-1" do %>
+        <i class="fas fa-calendar-alt me-2"></i> Manage Events
+      <% end %>
+      <%= link_to admin_registrations_path, class: "btn btn-outline-success flex-grow-1" do %>
+        <i class="fas fa-clipboard-list me-2"></i> Manage Registrations
+      <% end %>
+      <%= link_to root_path, class: "btn btn-outline-secondary flex-grow-1" do %>
+        <i class="fas fa-home me-2"></i> Back to Site
+      <% end %>
+    </div>
+  </div>
+
 </div>

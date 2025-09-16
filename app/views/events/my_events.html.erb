@@ -1,16 +1,43 @@
-<h1>My Events</h1>
-
-<% if @my_events.any? %>
-  <ul>
-    <% @my_events.each do |event| %>
-      <li>
-        <%= link_to event.name, event_path(event) %> - 
-        <%= event.date.strftime("%B %d, %Y") %> at <%= event.location %>
-        (<%= link_to "Edit", edit_event_path(event) %> | 
-         <%= link_to "Delete", event_path(event), method: :delete, data: { confirm: "Are you sure?" } %>)
-      </li>
+<div class="container my-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <h1 class="mb-0">My Events</h1>
+    <%= link_to new_event_path, class: "btn btn-success" do %>
+      <i class="fas fa-plus me-1"></i>
     <% end %>
-  </ul>
-<% else %>
-  <p>You haven’t created any events yet. <%= link_to "Create one", new_event_path %></p>
-<% end %>
+  </div>
+
+  <% if @my_events.any? %>
+    <div class="list-group">
+      <% @my_events.each do |event| %>
+        <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap py-3">
+          <!-- Event Info -->
+          <div>
+            <%= link_to event.name, event_path(event), class: "fw-bold text-decoration-none" %>
+            <div class="text-muted small mt-1">
+              <i class="fas fa-calendar-alt me-1"></i>
+              <%= event.date.strftime("%B %d, %Y") %> at <i class="fas fa-map-marker-alt me-1"></i><%= event.location %>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2 mt-2 mt-md-0">
+            <%= link_to event_path(event), class: "btn btn-outline-secondary btn-sm", title: "View Event" do %>
+              <i class="fas fa-eye"></i>
+            <% end %>
+            <%= link_to edit_event_path(event), class: "btn btn-outline-primary btn-sm", title: "Edit Event" do %>
+              <i class="fas fa-edit"></i>
+            <% end %>
+            <%= button_to event_path(event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm", title: "Delete Event" do %>
+              <i class="fas fa-trash-alt"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info mb-0">
+      You haven’t created any events yet. <%= link_to "Create one", new_event_path, class: "fw-bold text-decoration-none" %>
+    </div>
+  <% end %>
+</div>

@@ -12,3 +12,38 @@
  *= require bootstrap.min
  *= require_self
  */
+
+ /* Mobile menu toggle with checkbox */
+#menu-toggle:checked ~ #navbarNav {
+  display: block !important;
+}
+
+/* Default collapsed menu on mobile */
+@media (max-width: 991px) {
+  #navbarNav {
+    display: none;
+  }
+}
+.nav-item form {
+  display: inline;      /* makes form inline like the other links */
+  margin: 0;            /* remove extra spacing */
+}
+.nav-item form button {
+  padding: 0;           /* remove default button padding */
+  border: none;         /* remove border if needed */
+  background: none;     /* remove background */
+}
+
+.navbar-nav .nav-item form {
+  display: inline-flex;       /* Make form behave like inline-flex container */
+  align-items: center;        /* Align icon/text vertically */
+  margin: 0;                  /* Remove default form margins */
+}
+.navbar-nav .nav-item form button {
+  padding: 0;                 /* Remove button padding */
+  border: none;               /* Remove border */
+  background: none;           /* Remove background */
+  color: inherit;             /* Match text color with links */
+  font: inherit;              /* Match font styling with links */
+}
+

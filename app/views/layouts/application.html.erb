@@ -17,61 +17,119 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <%# Font Awesome 6 %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
+  <!DOCTYPE html>
+<html>
+  <head>
+    <title>EventApp</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-p6c6Y1aFfckh1xZprQp+8tBzClz1wUeGm48Ypi4VkY6e2e7j3EoZp7P8H0hcSUnU6pNx8GqQ1A4lFZ3cY9JvGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+
   <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-  <div class="container-fluid">
-    <%= link_to "EventApp", root_path, class: "navbar-brand" %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4 shadow-sm">
+      <div class="container-fluid">
+        <%= link_to "EventApp", root_path, class: "navbar-brand fw-bold" %>
 
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <% if user_signed_in? %>
-          <li class="nav-item">
-            <%= link_to "Events", events_path, class: "nav-link" %>
-          </li>
+        <!-- Mobile menu toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <% if current_user.admin? %>
-            <li class="nav-item">
-              <%= link_to "Dashboard", admin_root_path, class: "nav-link" %>
-            </li>
-          <% else %>
-            <li class="nav-item">
-              <%= link_to "Create Event", new_event_path, class: "nav-link" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "My Events", my_events_events_path, class: "nav-link" %>
-            </li>
-          <% end %>
-        <% end %>
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
+            <% if user_signed_in? %>
+              <li class="nav-item">
+                <%= link_to events_path, class: "nav-link d-flex align-items-center" do %>
+                  <i class="fas fa-calendar-alt me-1"></i> Events
+                <% end %>
+              </li>
 
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <% if user_signed_in? %>
-          <li class="nav-item">
-            <span class="navbar-text me-2">Hello, <%= current_user.name %></span>
-          </li>
-          <li class="nav-item">
-            <!-- <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %> -->
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-link nav-link", form: { class: "d-inline" } %>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-          </li>
-        <% end %>
-      </ul>
+              <% if current_user.admin? %>
+                <li class="nav-item">
+                  <%= link_to admin_root_path, class: "nav-link d-flex align-items-center" do %>
+                    <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                  <% end %>
+                </li>
+              <% else %>
+                <li class="nav-item">
+                  <%= link_to new_event_path, class: "nav-link d-flex align-items-center" do %>
+                    <i class="fas fa-plus me-1"></i> Create Event
+                  <% end %>
+                </li>
+                <li class="nav-item">
+                  <%= link_to my_events_events_path, class: "nav-link d-flex align-items-center" do %>
+                    <i class="fas fa-user me-1"></i> My Events
+                  <% end %>
+                </li>
+              <% end %>
+
+              <!-- My Profile -->
+              <li class="nav-item">
+                <%= link_to edit_user_registration_path, class: "nav-link d-flex align-items-center ms-2" do %>
+                  <i class="fas fa-id-badge me-1"></i> My Profile
+                <% end %>
+              </li>
+
+              <!-- Logout as inline form -->
+              <li class="nav-item d-flex align-items-center ms-2">
+                <%= form_with url: destroy_user_session_path, method: :delete, class: "d-inline" do %>
+                  <button type="submit" class="btn btn-outline-light d-flex align-items-center">
+                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                  </button>
+                <% end %>
+              </li>
+
+            <% else %>
+              <li class="nav-item">
+                <%= link_to new_user_registration_path, class: "nav-link d-flex align-items-center" do %>
+                  <i class="fas fa-user-plus me-1"></i> Sign Up
+                <% end %>
+              </li>
+              <li class="nav-item">
+                <%= link_to new_user_session_path, class: "nav-link d-flex align-items-center" do %>
+                  <i class="fas fa-sign-in-alt me-1"></i> Login
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <% if notice %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+
+      <% if alert %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+
+      <%= yield %>
     </div>
-  </div>
-</nav>
-
-    <%= yield %>
   </body>
+
+
+
+
+
 </html>

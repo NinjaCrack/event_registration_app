@@ -35,8 +35,24 @@ module Admin
       end
     end
 
+    def new
+      @event = Event.new
+    end
+
+    def create
+      @event = Event.new(event_params)
+      if @event.save
+        redirect_to admin_event_path(@event), notice: "Event created successfully."
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+
 
     def show
+      @event = Event.find(params[:id])
+      @registration = @event.registrations.build
+      @registrations = @event.registrations
     end
 
     def edit; end

@@ -1,66 +1,48 @@
-<h1>Events</h1>
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+    <h1 class="mb-0">Events</h1>
 
-<% if user_signed_in? %>
-  <%= link_to "Create Event", new_event_path, class: "btn btn-primary mb-3" %>
-<% end %>
+    <!-- Search form and Create button together -->
+    <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+      <%= form_with url: events_path, method: :get, local: true, class: "d-flex" do |f| %>
+        <%= f.text_field :q, value: params[:q], placeholder: "Search events...", class: "form-control me-2" %>
+        <%= f.submit "Search", class: "btn btn-outline-success me-2" %>
+      <% end %>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Location</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
+      <% if user_signed_in? %>
+        <%= link_to "Create Event", new_event_path, class: "btn btn-success mb-2" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row g-4">
     <% @events.each do |event| %>
-      <tr>
-        <td><%= event.name %></td>
-        <td><%= event.date %></td>
-        <td><%= event.location %></td>
-        <td>
-          <%= link_to "Show", event_path(event) %> |
-          <% if user_signed_in? && (current_user.admin? || event.user == current_user) %>
-            <%= link_to "Edit", edit_event_path(event) %> |
-            <%= button_to "Delete", event_path(event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
-
-          <% end %>
-        </td>
-      </tr>
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">
+              <%= link_to event.name, event_path(event), class: "text-decoration-none" %>
+            </h5>
+            <p class="card-text text-muted mb-3">
+              <i class="fas fa-calendar-alt me-1"></i>
+              <%= event.date.strftime("%B %d, %Y") %><br>
+              <i class="fas fa-map-marker-alt me-1"></i>
+              <%= event.location %>
+            </p>
+            <div class="mt-auto d-flex flex-wrap gap-2">
+              <%= link_to "Show", event_path(event), class: "btn btn-success btn-sm" %>
+              <% if user_signed_in? && (current_user.admin? || event.user == current_user) %>
+                <%= link_to "Edit", edit_event_path(event), class: "btn btn-outline-primary btn-sm" %>
+                <%= button_to "Delete", event_path(event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
 
-<h1>Events</h1>
-
-<h2>Upcoming Events</h2>
-<% if @upcoming_events.any? %>
-  <ul>
-    <% @upcoming_events.each do |event| %>
-      <li>
-        <%= link_to event.name, event_path(event) %> - 
-        <%= event.date.strftime("%B %d, %Y") %> at <%= event.location %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No upcoming events.</p>
-<% end %>
-
-<hr>
-
-<h2>Past Events</h2>
-<% if @past_events.any? %>
-  <ul>
-    <% @past_events.each do |event| %>
-      <li>
-        <%= link_to event.name, event_path(event) %> - 
-        <%= event.date.strftime("%B %d, %Y") %> at <%= event.location %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No past events.</p>
-<% end %>
-
+  <% if @events.empty? %>
+    <p class="text-muted mt-4">No events available.</p>
+  <% end %>
+</div>

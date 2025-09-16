@@ -1,10 +1,28 @@
-<h1>Registration Details</h1>
+<div class="card shadow-sm mx-auto my-4" style="max-width: 500px;">
+  <div class="card-body">
 
-<p><strong>Event:</strong> <%= @registration.event.name %></p>
-<p><strong>Attendee:</strong> <%= @registration.attendee_name %></p>
-<p><strong>Email:</strong> <%= @registration.attendee_email %></p>
-<p><strong>Registered At:</strong> <%= @registration.created_at.strftime("%B %d, %Y %H:%M") %></p>
+    <h3 class="card-title mb-4 text-center">Registration Details</h3>
 
-<%= link_to "Edit", edit_admin_registration_path(@registration) %> |
-<%= link_to "Delete", admin_registration_path(@registration), method: :delete, data: { confirm: "Are you sure?" } %> |
-<%= link_to "Back", admin_registrations_path %>
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item"><strong>Event:</strong> <%= @registration.event.name %></li>
+      <li class="list-group-item"><strong>Attendee:</strong> <%= @registration.attendee_name %></li>
+      <li class="list-group-item"><strong>Email:</strong> <%= @registration.attendee_email %></li>
+      <li class="list-group-item"><strong>Registered At:</strong> <%= @registration.created_at.strftime("%B %d, %Y %H:%M") %></li>
+    </ul>
+
+    <div class="d-flex justify-content-between">
+      <%= link_to edit_admin_registration_path(@registration), class: "btn btn-outline-primary" do %>
+        <i class="fas fa-edit me-1"></i> Edit
+      <% end %>
+
+      <%= button_to admin_registration_path(@registration), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger" do %>
+        <i class="fas fa-trash-alt me-1"></i> Delete
+      <% end %>
+
+      <%= link_to admin_registrations_path, class: "btn btn-outline-secondary" do %>
+        <i class="fas fa-arrow-left me-1"></i> Back
+      <% end %>
+    </div>
+
+  </div>
+</div>

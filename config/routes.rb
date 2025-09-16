@@ -4,7 +4,6 @@ Rails.application.routes.draw do
 
   resources :events do
     resources :registrations, only: [ :create, :edit, :update, :destroy ]
-
     collection do
       get :my_events
     end
@@ -12,6 +11,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root to: "dashboard#index"
+
     resources :events do
       resources :registrations
       collection do
@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         post :bulk
       end
     end
+    
     resources :registrations do
       collection do
         get :search

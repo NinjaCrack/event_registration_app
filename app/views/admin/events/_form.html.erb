@@ -1,42 +1,59 @@
-<%= form_with model: [:admin, @event], local: true do |f| %>
-  <% if @event.errors.any? %>
-    <div class="errors">
-      <h4><%= pluralize(@event.errors.count, "error") %> prevented saving:</h4>
-      <ul>
-        <% @event.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+<div class="container" style="max-width: 600px;">
+
+  <!-- Back button above the card -->
+  <div class="mb-2">
+    <%= link_to "javascript:history.back()", class: "btn btn-outline-secondary btn-sm" do %>
+      <i class="fas fa-arrow-left me-1"></i> Back
+    <% end %>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="text-center mb-4"><%= @event.new_record? ? "Create Event" : "Edit Event" %></h2>
+
+      <%= form_with model: [:admin, @event], local: true do |f| %>
+        <% if @event.errors.any? %>
+          <div class="alert alert-danger">
+            <h5><%= pluralize(@event.errors.count, "error") %> prevented saving:</h5>
+            <ul class="mb-0">
+              <% @event.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
         <% end %>
-      </ul>
+
+        <div class="mb-3">
+          <%= f.label :name, class: "form-label" %>
+          <%= f.text_field :name, class: "form-control", placeholder: "Enter event name" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :date, class: "form-label" %>
+          <%= f.date_field :date, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :location, class: "form-label" %>
+          <%= f.text_field :location, class: "form-control", placeholder: "Enter location" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :description, class: "form-label" %>
+          <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "Enter event description" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :status, class: "form-label" %>
+          <%= f.select :status, [["Open", "open"], ["Closed", "closed"]], {}, class: "form-select" %>
+        </div>
+
+        <div class="d-flex justify-content-center gap-2">
+          <%= f.submit @event.new_record? ? "Create Event" : "Update Event", class: "btn btn-success" %>
+          <%= link_to "Cancel", admin_events_path, class: "btn btn-outline-secondary" %>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-
-  <div>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
   </div>
-
-  <div>
-    <%= f.label :date %>
-    <%= f.date_field :date %>
-  </div>
-
-  <div>
-    <%= f.label :location %>
-    <%= f.text_field :location %>
-  </div>
-
-  <div>
-    <%= f.label :description %>
-    <%= f.text_area :description %>
-  </div>
-
-  <div>
-    <%= f.label :status %>
-    <%= f.select :status, [["Open", "open"], ["Closed", "closed"]] %>
-  </div>
-
-  <div>
-    <%= f.submit %>
-    <%= link_to "Cancel", admin_events_path %>
-  </div>
-<% end %>
+</div>

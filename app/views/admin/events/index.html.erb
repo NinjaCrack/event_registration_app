@@ -1,47 +1,82 @@
-<h1>Admin: Manage Events</h1>
-
-<%= form_with url: admin_events_path, method: :get, local: true do |f| %>
-  <div>
-    <%= f.label :search, "Search Events" %>
-    <%= f.text_field :search, value: params[:search] %>
-    <%= f.submit "Search" %>
+<div class="container my-4">
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <h1 class="mb-0">Admin: Manage Events</h1>
+    <%= link_to new_admin_event_path, class: "btn btn-success mb-2" do %>
+      <i class="fas fa-plus me-1"></i> Create Event
+    <% end %>
   </div>
-<% end %>
 
-<%= form_with url: bulk_admin_events_path, method: :post, local: true do %>
-  <table>
-    <thead>
-      <tr>
-        <th>Select</th>
-        <th>Name</th>
-        <th>Date</th>
-        <th>Location</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @events.each do |event| %>
-        <tr>
-          <td><%= check_box_tag "event_ids[]", event.id %></td>
-          <td><%= event.name %></td>
-          <td><%= event.date %></td>
-          <td><%= event.location %></td>
-          <td><%= event.status %></td>
-          <td>
-            <%= link_to "View", admin_event_path(event) %> |
-            <%= link_to "Edit", edit_admin_event_path(event) %> |
-            <%= link_to "Delete", admin_event_path(event),
-                  method: :delete,
-                  data: { confirm: "Are you sure?" } %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-  <div>
-    <%= submit_tag "Bulk Delete", name: "bulk_action" %>
-    <%= submit_tag "Bulk Close", name: "bulk_action" %>
+  <!-- Search Form -->
+  <div class="d-flex justify-content-end mb-3">
+    <%= form_with url: admin_events_path, method: :get, local: true, class: "d-flex gap-2 align-items-center" do |f| %>
+      <%= f.text_field :search, value: params[:search], placeholder: "Search events...", class: "form-control", style: "max-width: 250px;" %>
+      <%= f.submit "Search", class: "btn btn-outline-primary" %>
+    <% end %>
   </div>
-<% end %>
+
+  <!-- Events Table -->
+  <%= form_with url: bulk_admin_events_path, method: :post, local: true do %>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th scope="col"><input type="checkbox" id="select_all"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Location</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @events.each do |event| %>
+            <tr>
+              <td><%= check_box_tag "event_ids[]", event.id %></td>
+              <td><%= event.name %></td>
+              <td><%= event.date.strftime("%B %d, %Y") %></td>
+              <td><%= event.location %></td>
+              <td><%= event.status %></td>
+              <td>
+                <div class="d-flex flex-wrap gap-1">
+                  <%= link_to admin_event_path(event), class: "btn btn-outline-secondary btn-sm" do %>
+                    <i class="fas fa-eye"></i>
+                  <% end %>
+                  <%= link_to edit_admin_event_path(event), class: "btn btn-outline-primary btn-sm" do %>
+                    <i class="fas fa-edit"></i>
+                  <% end %>
+                  <%= link_to admin_event_path(event), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" do %>
+                    <i class="fas fa-trash-alt"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Bulk Actions -->
+    <div class="d-flex gap-2 mt-3">
+      <%= submit_tag "Delete Selected", name: "bulk_action", value: "Bulk Delete", class: "btn btn-danger" %>
+      <%= submit_tag "Close Selected", name: "bulk_action", value: "Bulk Close", class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+
+  <% if @events.empty? %>
+    <div class="alert alert-info mt-3">
+      No events found.
+    </div>
+  <% end %>
+</div>
+
+<!-- Optional JS to select/deselect all checkboxes -->
+<script>
+  document.addEventListener("turbo:load", () => {
+  const selectAll = document.getElementById("select_all");
+  selectAll?.addEventListener("change", () => {
+    document.querySelectorAll('input[name="event_ids[]"]').forEach(cb => cb.checked = selectAll.checked);
+  });
+});
+
+</script>
