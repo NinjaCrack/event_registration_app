@@ -8,17 +8,15 @@ module Admin
       # @events = Event.includes(:user, :registrations).order(created_at: :desc)
       @events = Event.all.order(date: :desc)
       if params[:search].present?
-        # @events = @events.where("name ILIKE ? OR location ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
-        query = "%#{params[:search]}%"
+      terms = params[:search].strip.split
+      terms.each do |term|
+        q = "%#{term.downcase}%"
         @events = @events.where(
-          "events.name ILIKE :q
-          OR events.location ILIKE :q
-          OR events.description ILIKE :q
-          OR events.status ILIKE :q",
-          q: query
+          "LOWER(name) LIKE :q OR LOWER(location) LIKE :q OR LOWER(description) LIKE :q OR LOWER(status) LIKE :q",
+          q: q
         )
-
       end
+end
     end
 
     def bulk

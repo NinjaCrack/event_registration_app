@@ -7,10 +7,17 @@ class EventsController < ApplicationController
         @upcoming_events = Event.open_events
         @past_events = Event.past
         @events = Event.order(date: :asc)
-        if params[:q].present?
-            q = "%#{params[:q]}"
-            @events = @events.where("name ILIKE ? OR location ILIKE ?", q, q)
+        if params[:search].present?
+        terms = params[:search].strip.split
+        terms.each do |term|
+            q = "%#{term.downcase}%"
+            @events = @events.where(
+            "LOWER(name) LIKE :q OR LOWER(location) LIKE :q OR LOWER(description) LIKE :q OR LOWER(status) LIKE :q",
+            q: q
+            )
         end
+        end
+        
     end
 
     def my_events

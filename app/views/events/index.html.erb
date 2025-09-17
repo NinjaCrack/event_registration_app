@@ -5,7 +5,7 @@
     <!-- Search form and Create button together -->
     <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
       <%= form_with url: events_path, method: :get, local: true, class: "d-flex" do |f| %>
-        <%= f.text_field :q, value: params[:q], placeholder: "Search events...", class: "form-control me-2" %>
+        <%= f.text_field :search, value: params[:search], placeholder: "Search events...", class: "form-control me-2" %>
         <%= f.submit "Search", class: "btn btn-outline-success me-2" %>
       <% end %>
 
